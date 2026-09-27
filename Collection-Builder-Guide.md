@@ -1,8 +1,5 @@
 # AIO Metadata: Collection Builder Guide
 
-A simple guide to organizing catalogs into collections and exporting them for Nuvio or Fusion.
-
-**AIO Metadata v3.2.0 · Reviewed September 27, 2026.** Screenshots use a signed-out demonstration draft and public featured layouts. No personal account or addon links are included. The target apps' import screens are not shown; their menu names may vary by version.
 
 ## Start here
 
@@ -343,7 +340,3 @@ Check the cover URL first: it should point to an image the viewing device can re
 | Preview looks different from the app | The builder preview is approximate. Test the exported layout in the target app. |
 
 **A good first setup:** one collection, two folders, one source per folder. Once that works in your app, add more sections or adapt a featured layout.
-
----
-
-Featured examples and artwork belong to their respective creators. The TVGenie example shown here is credited in the builder to tvgeniekodi. This guide documents the observed builder interface; it does not claim that an import was tested inside Nuvio or Fusion.
