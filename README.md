@@ -2,6 +2,8 @@
 
 An illustrated, community-oriented guide to preparing catalogs, building collections, using featured layouts, exporting to Nuvio or Fusion, and troubleshooting common problems.
 
+**[Read the dark guide online](https://jeor.github.io/aiom/)**
+
 **[Read the guide in Markdown](Collection-Builder-Guide.md)** · **[Open the dark HTML edition](index.html)** · **[Download the offline edition](Collection-Builder-Guide.html)**
 
 The HTML edition has a dark theme, section navigation, keyboard focus indicators, responsive tables and a print stylesheet. The offline edition embeds all screenshots and styling in one file. GitHub displays Markdown directly; HTML can be viewed through GitHub Pages or downloaded and opened locally.
