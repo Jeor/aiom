@@ -32,7 +32,7 @@ def render(embedded):
   if m:
    path='data:image/png;base64,'+base64.b64encode((p/m[2]).read_bytes()).decode() if embedded else m[2]
    width,height=struct.unpack('>II',(p/m[2]).read_bytes()[16:24])
-   out.append(f'<figure><img loading="lazy" width="{width}" height="{height}" alt="'+html.escape(m[1],quote=True)+'" src="'+path+'"><figcaption>'+html.escape(m[1])+'</figcaption></figure>');i+=1;continue
+   out.append(f'<figure><img loading="eager" width="{width}" height="{height}" alt="'+html.escape(m[1],quote=True)+'" src="'+path+'"><figcaption>'+html.escape(m[1])+'</figcaption></figure>');i+=1;continue
   m=re.match(r'(#{1,3}) (.*)',s)
   if m:
    n=len(m[1]);out.append(f'<h{n} id="{slug(m[2])}">'+inline('Collection Builder Guide' if n==1 else m[2])+f'</h{n}>')
@@ -47,7 +47,10 @@ def render(embedded):
   out.append('<p>'+inline(s)+'</p>');i+=1
  content=''.join(out)
  sections=re.split(r'(?=<h2 )',content)
- content=sections[0]+''.join('<section class="guide-section" aria-labelledby="'+re.search(r'id="([^"]+)"',part)[1]+'">'+part+'</section>' for part in sections[1:])
+ def subsections(part):
+  pieces=re.split(r'(?=<h3 )',part)
+  return pieces[0]+''.join('<div class="guide-subsection">'+piece+'</div>' for piece in pieces[1:])
+ content=sections[0]+''.join('<section class="guide-section" aria-labelledby="'+re.search(r'id="([^"]+)"',part)[1]+'">'+subsections(part)+'</section>' for part in sections[1:])
  css='<style>'+(p/'guide.css').read_text()+'</style>' if embedded else '<link rel="stylesheet" href="guide.css">'
  nav='<aside class="sidebar"><details open><summary>On this page</summary><nav aria-label="Guide sections">'+''.join('<a href="#'+a+'">'+html.escape(t)+'</a>' for a,t in headings)+'</nav></details><script>if(matchMedia("(max-width:720px)").matches)document.querySelector(".sidebar details").open=false;</script></aside>'
  header='<header class="app-header"><a class="brand" href="#main"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 10 5-10 5L2 8l10-5Z"/><path d="m2 12 10 5 10-5M2 16l10 5 10-5"/></svg><div><div class="brand-name">AIOMetadata</div><div class="brand-subtitle">Community guide · Collections &amp; Widgets</div></div></a><a class="repo-link" href="https://github.com/cedya77/aiometadata">GitHub</a></header>'
