@@ -35,7 +35,7 @@ def render(embedded):
    out.append(f'<figure><img loading="lazy" width="{width}" height="{height}" alt="'+html.escape(m[1],quote=True)+'" src="'+path+'"><figcaption>'+html.escape(m[1])+'</figcaption></figure>');i+=1;continue
   m=re.match(r'(#{1,3}) (.*)',s)
   if m:
-   n=len(m[1]);out.append(f'<h{n} id="{slug(m[2])}">'+inline(m[2])+f'</h{n}>')
+   n=len(m[1]);out.append(f'<h{n} id="{slug(m[2])}">'+inline('Collection Builder Guide' if n==1 else m[2])+f'</h{n}>')
    if n==1 and not embedded:out.append('<div class="download"><a href="Collection-Builder-Guide.md">Read Markdown</a><a href="Collection-Builder-Guide.html" download>Download offline guide</a><a href="#10-quick-troubleshooting">Find a fix</a></div>')
    i+=1;continue
   if s=='---':out.append('<hr>');i+=1;continue
@@ -47,7 +47,8 @@ def render(embedded):
   out.append('<p>'+inline(s)+'</p>');i+=1
  css='<style>'+(p/'guide.css').read_text()+'</style>' if embedded else '<link rel="stylesheet" href="guide.css">'
  nav='<aside class="sidebar"><details open><summary>On this page</summary><nav aria-label="Guide sections">'+''.join('<a href="#'+a+'">'+html.escape(t)+'</a>' for a,t in headings)+'</nav></details><script>if(matchMedia("(max-width:720px)").matches)document.querySelector(".sidebar details").open=false;</script></aside>'
- return '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="A practical illustrated guide to AIO Metadata catalogs, collections, Nuvio and Fusion layouts, saving, sharing and troubleshooting."><title>AIO Metadata Collection Builder Guide</title>'+css+'</head><body><a class="skip" href="#main">Skip to guide</a><div class="shell">'+nav+'<main id="main">'+''.join(out)+'<footer><a class="back" href="#main">Back to top</a></footer></main></div></body></html>'
+ header='<header class="app-header"><a class="brand" href="#main"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 10 5-10 5L2 8l10-5Z"/><path d="m2 12 10 5 10-5M2 16l10 5 10-5"/></svg><div><div class="brand-name">AIOMetadata</div><div class="brand-subtitle">Community guide · Collections &amp; Widgets</div></div></a><a class="repo-link" href="https://github.com/Jeor/aiom">GitHub</a></header>'
+ return '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="A practical illustrated guide to AIO Metadata catalogs, collections, Nuvio and Fusion layouts, saving, sharing and troubleshooting."><title>AIO Metadata Collection Builder Guide</title>'+css+'</head><body><a class="skip" href="#main">Skip to guide</a>'+header+'<div class="shell">'+nav+'<main id="main">'+''.join(out)+'<script>if("IntersectionObserver" in window){const links=[...document.querySelectorAll(".sidebar nav a")];const observer=new IntersectionObserver(entries=>{for(const e of entries){if(e.isIntersecting){for(const a of links){if(a.hash==="#"+e.target.id)a.setAttribute("aria-current","location");else a.removeAttribute("aria-current");}}}},{rootMargin:"0px 0px -65% 0px"});document.querySelectorAll("main h2").forEach(h=>observer.observe(h));}</script><footer><a class="back" href="#main">Back to top</a></footer></main></div></body></html>'
 (p/'index.html').write_text(render(False))
 (p/'Collection-Builder-Guide.html').write_text(render(True))
 # The publication directory is allowlisted: no drafts, logs, account exports or unrelated files.
