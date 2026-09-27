@@ -1,0 +1,4 @@
+github-ready/
+*.zip
+__pycache__/
+preview-*.png
