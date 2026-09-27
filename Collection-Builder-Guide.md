@@ -185,7 +185,9 @@ A new collection is not yet in your list until you click **Add collection**. **D
 
 ![Selecting the TMDB Popular movie catalog](images/06-choose-catalog.png)
 
-The picker lets you search, filter by media type and select several catalogs at once. There are also provider tabs for **MDBList**, **TheTVDB** and **TMDB**. Their available options depend on the source and your configuration.
+The picker lets you search, filter by media type and select several catalogs at once.
+
+**You can also add folder sources directly from a provider.** Click **Add catalog**, then use the **TMDB** or **TheTVDB** tab to find collections, or the **MDBList** tab to search for lists. Select the collection or list you want and add it to the folder. You do not have to start with a source already shown under **Your catalogs**. Available options depend on the provider and your configuration.
 
 Choose the correct media type: **TMDB Popular — movie** and **TMDB Popular — series** are different catalogs.
 
