@@ -14,3 +14,6 @@ An illustrated, community-oriented guide to preparing catalogs, building collect
 - Folder artwork, Nuvio presentation, Fusion rows and app-specific differences.
 - Apply versus Save, re-importing changes and avoiding duplicate Fusion widgets.
 - Safe sharing and symptom-based troubleshooting.
+
+- Image caching, storage budgets, image sizes and freshness policies.
+- Essential, popular, comprehensive and MAL warming; image queues and troubleshooting.
