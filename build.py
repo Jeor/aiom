@@ -1,8 +1,9 @@
 from pathlib import Path
-import re,html,base64,zipfile,shutil,struct
+import re,html,base64,zipfile,shutil,struct,json
 p=Path(__file__).parent
-pages=[('Catalog-Management-Guide','catalogs.html','Catalog Management','common-tag-questions'),('Collection-Builder-Guide','index.html','Collections','10-quick-troubleshooting'),('Caching-Warming-Guide','caching-warming.html','Caching & Warming','which-setting-should-i-check')]
+pages=[('Catalog-Management-Guide','catalogs.html','Catalog Management','common-tag-questions'),('Collection-Builder-Guide','collections.html','Collections','10-quick-troubleshooting'),('Caching-Warming-Guide','caching-warming.html','Caching & Warming','which-setting-should-i-check')]
 imgs=[]
+SITE_HEADER='<header class="app-header"><a class="brand" href="index.html"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 10 5-10 5L2 8l10-5Z"/><path d="m2 12 10 5 10-5M2 16l10 5 10-5"/></svg><div><div class="brand-name">AIOMetadata</div><div class="brand-subtitle">Community guides</div></div></a><nav class="header-links" aria-label="Project links"><a class="repo-link" href="https://github.com/cedya77/aiometadata">GitHub</a><a class="coffee-link" href="https://buymeacoffee.com/cedya" aria-label="Support the AIO Metadata creator on Buy Me a Coffee" title="Support the AIO Metadata creator"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a3 3 0 0 1 0 6h-1M3 8h15v9a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V8ZM6 2v3M10 2v3M14 2v3"/></svg><span>Support the creator</span></a></nav></header>'
 def slug(s):return re.sub(r'[^\w\- ]','',s.lower()).replace(' ','-')
 def inline(s):
  s=html.escape(s)
@@ -66,9 +67,9 @@ def render(src, page, embedded):
  content=re.sub(r"(</h1>)", r'\1<p class="reading-hint">Follow the visible steps. Open a reference when you need more detail. <button type="button" id="expand-details">Expand all details</button></p>', content, count=1)
  content+='<script>const detailSections=[...document.querySelectorAll("main details.reference")];const expandButton=document.getElementById("expand-details");expandButton.addEventListener("click",()=>{const expand=detailSections.some(d=>!d.open);detailSections.forEach(d=>d.open=expand);expandButton.textContent=expand?"Collapse all details":"Expand all details";});function revealSection(){const target=document.getElementById(decodeURIComponent(location.hash.slice(1)));if(!target)return;let ancestor=target.parentElement;while(ancestor){if(ancestor.tagName==="DETAILS")ancestor.open=true;ancestor=ancestor.parentElement;}requestAnimationFrame(()=>target.scrollIntoView());}addEventListener("hashchange",revealSection);if(location.hash)revealSection();addEventListener("beforeprint",()=>detailSections.forEach(d=>{d.dataset.wasOpen=d.open;d.open=true;}));addEventListener("afterprint",()=>detailSections.forEach(d=>d.open=d.dataset.wasOpen==="true"));</script>'
  css='<style>'+(p/'guide.css').read_text()+'</style>' if embedded else '<link rel="stylesheet" href="guide.css">'
- page_nav='<nav class="guide-pages" aria-label="Guide pages">'+''.join('<a href="'+(q[0]+'.html' if embedded else q[1])+'"'+(' aria-current="page"' if q==page else '')+'>'+html.escape(q[2])+'</a>' for q in pages)+'</nav>'
+ page_nav='<nav class="guide-pages" aria-label="Guide pages"><a href="index.html">All guides</a>'+''.join('<a href="'+(q[0]+'.html' if embedded else q[1])+'"'+(' aria-current="page"' if q==page else '')+'>'+html.escape(q[2])+'</a>' for q in pages)+'</nav>'
  nav='<aside class="sidebar">'+page_nav+'<details open><summary>On this page</summary><nav aria-label="Guide sections">'+''.join('<a href="#'+a+'">'+html.escape(t)+'</a>' for a,t in headings)+'</nav></details><script>if(matchMedia("(max-width:720px)").matches)document.querySelector(".sidebar details").open=false;</script></aside>'
- header='<header class="app-header"><a class="brand" href="#main"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 10 5-10 5L2 8l10-5Z"/><path d="m2 12 10 5 10-5M2 16l10 5 10-5"/></svg><div><div class="brand-name">AIOMetadata</div><div class="brand-subtitle">Community guides</div></div></a><nav class="header-links" aria-label="Project links"><a class="repo-link" href="https://github.com/cedya77/aiometadata">GitHub</a><a class="coffee-link" href="https://buymeacoffee.com/cedya" aria-label="Support the AIO Metadata creator on Buy Me a Coffee" title="Support the AIO Metadata creator"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a3 3 0 0 1 0 6h-1M3 8h15v9a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V8ZM6 2v3M10 2v3M14 2v3"/></svg><span>Support the creator</span></a></nav></header>'
+ header=SITE_HEADER
  lightbox='<dialog class="image-viewer" aria-label="Enlarged screenshot"><button class="image-close" autofocus>Close</button><img alt=""></dialog><script>const viewer=document.querySelector(".image-viewer");document.querySelectorAll(".screenshot-open").forEach(button=>button.addEventListener("click",()=>{const source=button.querySelector("img");const image=viewer.querySelector("img");image.src=source.src;image.alt=source.alt;viewer.showModal();}));viewer.querySelector("button").addEventListener("click",()=>viewer.close());viewer.addEventListener("click",event=>{if(event.target===viewer)viewer.close();});</script>'
  return '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="A practical illustrated guide to AIO Metadata catalogs, collections, Nuvio and Fusion layouts, saving, sharing and troubleshooting."><title>AIO Metadata — '+html.escape(label)+'</title>'+css+'</head><body><a class="skip" href="#main">Skip to guide</a>'+header+'<div class="shell">'+nav+'<main id="main">'+content+lightbox+'<script>if("IntersectionObserver" in window){const links=[...document.querySelectorAll(".sidebar details nav a")];const observer=new IntersectionObserver(entries=>{for(const e of entries){if(e.isIntersecting){for(const a of links){if(a.hash==="#"+e.target.id)a.setAttribute("aria-current","location");else a.removeAttribute("aria-current");}}}},{rootMargin:"0px 0px -65% 0px"});document.querySelectorAll("main h2").forEach(h=>observer.observe(h));}</script><footer><a class="back" href="#main">Back to top</a></footer></main></div></body></html>'
 for page in pages:
@@ -79,22 +80,21 @@ for page in pages:
  for anchor in re.findall(r'\]\(#([^)]+)\)',src):assert anchor in ids,anchor
  imgs+=re.findall(r'!\[[^\]]*\]\(([^)]+)\)',src)
  online=render(src,page,False)
- if page[1]=='index.html':
-  redirects={'11-cache-images-for-faster-repeat-browsing':'image-caching','12-choose-a-warming-mode':'warming-modes','13-check-warming-progress-and-solve-problems':'progress-and-troubleshooting'}
-  import json
-  catalog_ids=[slug(t) for t in re.findall(r'^#{1,3} (.*)$',(p/'Catalog-Management-Guide.md').read_text(),re.M)]
-  catalog_redirects={key:'catalogs.html#'+key for key in catalog_ids if key not in ('quick-start',)}
-  catalog_redirects['catalogs-and-the-builder']='catalogs.html#catalog-controls'
-  catalog_script='<script>const catalogMoved='+json.dumps(catalog_redirects)+';if(catalogMoved[location.hash.slice(1)])location.replace(catalogMoved[location.hash.slice(1)]);</script>'
-  online=online.replace('</head>',catalog_script+'</head>')
-  script='<script>const moved='+json.dumps(redirects)+';if(moved[location.hash.slice(1)])location.replace("caching-warming.html#"+moved[location.hash.slice(1)]);</script>'
-  online=online.replace('</head>',script+'</head>')
  (p/page[1]).write_text(online)
  (p/(page[0]+'.html')).write_text(render(src,page,True))
+# Keep shared links to sections of the former index working.
+redirects={slug(t):'collections.html#'+slug(t) for t in re.findall(r'^#{1,3} (.*)$',(p/'Collection-Builder-Guide.md').read_text(),re.M)}
+for title in re.findall(r'^#{1,3} (.*)$',(p/'Catalog-Management-Guide.md').read_text(),re.M):
+ key=slug(title)
+ if key!='quick-start':redirects[key]='catalogs.html#'+key
+redirects['catalogs-and-the-builder']='catalogs.html#catalog-controls'
+for old,new in {'11-cache-images-for-faster-repeat-browsing':'image-caching','12-choose-a-warming-mode':'warming-modes','13-check-warming-progress-and-solve-problems':'progress-and-troubleshooting'}.items():redirects[old]='caching-warming.html#'+new
+home=(p/'home-template.html').read_text().replace('{{HEADER}}',SITE_HEADER).replace('{{REDIRECTS}}',json.dumps(redirects))
+(p/'index.html').write_text(home)
 assert all((p/x).is_file() for x in imgs)
 # Only curated guide files and referenced screenshots enter the publication package.
 repo=p/'github-ready';repo.mkdir(exist_ok=True)
-files=['README.md','guide.css','build.py','CONTRIBUTING.md','ATTRIBUTION.md','.nojekyll','.gitignore']
+files=['index.html','home-template.html','README.md','guide.css','build.py','CONTRIBUTING.md','ATTRIBUTION.md','.nojekyll','.gitignore']
 for page in pages:files += [page[0]+'.md',page[0]+'.html',page[1]]
 files+=list(dict.fromkeys(imgs))
 for f in files:
