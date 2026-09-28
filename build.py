@@ -1,7 +1,7 @@
 from pathlib import Path
 import re,html,base64,zipfile,shutil,struct
 p=Path(__file__).parent
-pages=[('Collection-Builder-Guide','index.html','Collections','10-quick-troubleshooting'),('Caching-Warming-Guide','caching-warming.html','Caching & Warming','which-setting-should-i-check')]
+pages=[('Catalog-Management-Guide','catalogs.html','Catalog Management','common-tag-questions'),('Collection-Builder-Guide','index.html','Collections','10-quick-troubleshooting'),('Caching-Warming-Guide','caching-warming.html','Caching & Warming','which-setting-should-i-check')]
 imgs=[]
 def slug(s):return re.sub(r'[^\w\- ]','',s.lower()).replace(' ','-')
 def inline(s):
@@ -45,10 +45,26 @@ def render(src, page, embedded):
   out.append('<p>'+inline(s)+'</p>');i+=1
  content=''.join(out)
  sections=re.split(r'(?=<h2 )',content)
+ # Keep the main path visible; references and optional branches open on demand.
+ folded_sections={
+  'Collections': {'1-what-are-you-building','4-understand-the-editor','6-customize-folders-and-collections','7-fusion-example-a-normal-catalog-row','9-share-a-layout-without-sharing-your-account-link'},
+  'Catalog Management': {'filter-select-and-manage-tags','use-tags-to-build-a-collection-faster','tagged-profiles-and-optional-content-ratings','common-tag-questions','example-make-a-source-then-put-it-in-a-folder','where-does-the-builder-get-its-catalog-list'},
+  'Caching & Warming': {'save-and-verify-settings','image-caching','warming-modes','progress-and-troubleshooting'},
+ }
+ folded_subsections={'defaults-and-suggested-values','which-button-should-i-use','read-the-catalog-management-list','see-what-a-complete-layout-looks-like','d-find-a-source-directly-from-a-provider','e-check-the-finished-movie-night-example','updating-an-existing-layout','image-caching','my-folder-is-empty','i-saved-but-nothing-changed-in-my-app','i-cannot-save-or-cannot-see-a-genre-option','my-artwork-is-blank','other-problems'}
+ def fold(part,level):
+  heading,body=part.split(f'</h{level}>',1)
+  return '<details class="reference"><summary>'+heading+f'</h{level}>'+'</summary><div class="reference-body">'+body+'</div></details>'
  def subsections(part):
   pieces=re.split(r'(?=<h3 )',part)
-  return pieces[0]+''.join('<div class="guide-subsection">'+piece+'</div>' for piece in pieces[1:])
- content=sections[0]+''.join('<section class="guide-section" aria-labelledby="'+re.search(r'id="([^"]+)"',part)[1]+'">'+subsections(part)+'</section>' for part in sections[1:])
+  result=pieces[0]
+  for piece in pieces[1:]:
+   ident=re.search(r'id="([^"]+)"',piece)[1]
+   result+=fold(piece,3) if ident in folded_subsections else '<div class="guide-subsection">'+piece+'</div>'
+  return result
+ content=sections[0]+''.join('<section class="guide-section">'+(fold(subsections(part),2) if re.search(r'id="([^"]+)"',part)[1] in folded_sections[label] else subsections(part))+'</section>' for part in sections[1:])
+ content=re.sub(r"(</h1>)", r'\1<p class="reading-hint">Follow the visible steps. Open a reference when you need more detail. <button type="button" id="expand-details">Expand all details</button></p>', content, count=1)
+ content+='<script>const detailSections=[...document.querySelectorAll("main details.reference")];const expandButton=document.getElementById("expand-details");expandButton.addEventListener("click",()=>{const expand=detailSections.some(d=>!d.open);detailSections.forEach(d=>d.open=expand);expandButton.textContent=expand?"Collapse all details":"Expand all details";});function revealSection(){const target=document.getElementById(decodeURIComponent(location.hash.slice(1)));if(!target)return;let ancestor=target.parentElement;while(ancestor){if(ancestor.tagName==="DETAILS")ancestor.open=true;ancestor=ancestor.parentElement;}requestAnimationFrame(()=>target.scrollIntoView());}addEventListener("hashchange",revealSection);if(location.hash)revealSection();addEventListener("beforeprint",()=>detailSections.forEach(d=>{d.dataset.wasOpen=d.open;d.open=true;}));addEventListener("afterprint",()=>detailSections.forEach(d=>d.open=d.dataset.wasOpen==="true"));</script>'
  css='<style>'+(p/'guide.css').read_text()+'</style>' if embedded else '<link rel="stylesheet" href="guide.css">'
  page_nav='<nav class="guide-pages" aria-label="Guide pages">'+''.join('<a href="'+(q[0]+'.html' if embedded else q[1])+'"'+(' aria-current="page"' if q==page else '')+'>'+html.escape(q[2])+'</a>' for q in pages)+'</nav>'
  nav='<aside class="sidebar">'+page_nav+'<details open><summary>On this page</summary><nav aria-label="Guide sections">'+''.join('<a href="#'+a+'">'+html.escape(t)+'</a>' for a,t in headings)+'</nav></details><script>if(matchMedia("(max-width:720px)").matches)document.querySelector(".sidebar details").open=false;</script></aside>'
@@ -66,6 +82,11 @@ for page in pages:
  if page[1]=='index.html':
   redirects={'11-cache-images-for-faster-repeat-browsing':'image-caching','12-choose-a-warming-mode':'warming-modes','13-check-warming-progress-and-solve-problems':'progress-and-troubleshooting'}
   import json
+  catalog_ids=[slug(t) for t in re.findall(r'^#{1,3} (.*)$',(p/'Catalog-Management-Guide.md').read_text(),re.M)]
+  catalog_redirects={key:'catalogs.html#'+key for key in catalog_ids if key not in ('quick-start',)}
+  catalog_redirects['catalogs-and-the-builder']='catalogs.html#catalog-controls'
+  catalog_script='<script>const catalogMoved='+json.dumps(catalog_redirects)+';if(catalogMoved[location.hash.slice(1)])location.replace(catalogMoved[location.hash.slice(1)]);</script>'
+  online=online.replace('</head>',catalog_script+'</head>')
   script='<script>const moved='+json.dumps(redirects)+';if(moved[location.hash.slice(1)])location.replace("caching-warming.html#"+moved[location.hash.slice(1)]);</script>'
   online=online.replace('</head>',script+'</head>')
  (p/page[1]).write_text(online)

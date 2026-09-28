@@ -16,7 +16,16 @@ A larger server does not need every warmer enabled. Choose work that people will
 
 ## Recommended starting setup
 
-**New to caching? Start here.** These suggestions suit a modest setup; they are not a requirement to change settings that already work well. The **Default** column describes the checked upstream settings. Your installation may already have overrides.
+Start with caching, then add warming only if first visits need it. Keep settings that already work well. Expand the reference below to compare upstream defaults with suggested values.
+
+
+1. Enable the image cache and the artwork classes you use in **Dashboard → Settings → Images & Art**.
+2. [Save and verify the changes](#save-and-verify-settings), including any required restart.
+3. Browse normally and check **Ops → Image Cache** before adding a full warm.
+4. If first visits still need preparation, follow [Warming modes](#warming-modes) and run one limited test.
+5. Use the [problem-to-setting table](#which-setting-should-i-check) before increasing limits.
+
+### Defaults and suggested values
 
 | Setting | Upstream default | Suggested first setup |
 |---|---|---|
@@ -35,11 +44,6 @@ A larger server does not need every warmer enabled. Choose work that people will
 | Warmup Interval (hrs) | `24` | Keep `24` for comprehensive warming. |
 | Image Warm Concurrency (min / max) | `4` / `48` | Keep initially; try a maximum of `24` only if warming affects browsing. |
 
-1. Enable the image cache and the artwork classes you use in **Dashboard → Settings → Images & Art**.
-2. [Save and verify the changes](#save-and-verify-settings), including any required restart.
-3. Browse normally and check **Ops → Image Cache** before adding a full warm.
-4. If first visits still need preparation, follow [Warming modes](#warming-modes) and run one limited test.
-5. Use the [problem-to-setting table](#which-setting-should-i-check) before increasing limits.
 
 ## Which setting should I check?
 

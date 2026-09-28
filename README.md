@@ -20,6 +20,8 @@ An illustrated, community-oriented guide to preparing catalogs, building collect
 
 ## Guides
 
+- [Catalog Management](https://jeor.github.io/aiom/catalogs.html) — sources, visibility, tags and installation profiles.
+
 - [Collections](https://jeor.github.io/aiom/) — catalogs, folders, rows, featured examples, exports and troubleshooting.
 - [Caching & Warming](https://jeor.github.io/aiom/caching-warming.html) — recommended starting setup, defaults, image caching, warming modes and troubleshooting.
 
