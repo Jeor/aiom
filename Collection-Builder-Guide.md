@@ -5,6 +5,17 @@
 
 **New to collections?** Follow the [five-step quick start](#quick-start), then use the featured example or the manual walkthrough. **Already building?** Jump to [Catalogs and the builder](#catalogs-and-the-builder), [saving and exporting](#8-save-export-and-use-your-layout), or [troubleshooting](#10-quick-troubleshooting). For faster repeat browsing, see [Caching & Warming](Caching-Warming-Guide.md).
 
+## Choose your starting point
+
+| What you want | Best place to start | What you will build |
+|---|---|---|
+| A ready-made layout to customize | [Use a featured layout](#3-easiest-start-use-a-featured-layout) | Import one section, then adjust its folders and sources. |
+| A small collection of your own | [Build your own collection](#5-build-your-own-collection) | Movie Night with two folders, each connected to a movie catalog. |
+| Titles displayed directly in Fusion | [Create a normal catalog row](#7-fusion-example-a-normal-catalog-row) | A Trending Tonight row without a folder to open first. |
+| A folder based on a provider collection or public list | [Find a provider source](#d-find-a-source-directly-from-a-provider) | Attach a TMDB/TheTVDB collection or an MDBList list from the picker. |
+
+If this is your first layout, finish one small example and open it in your app before importing a large pack.
+
 ## Quick start
 
 1. **Prepare a source.** In **Catalogs**, make sure the movie or show catalog you want is enabled. Save your AIO configuration.
@@ -125,6 +136,14 @@ Examples available when this guide was written:
 
 Some featured layouts use adapted sources. Read their description: an original Trakt list may have been replaced with an MDBList counterpart or another available source. Provider access and required keys still matter.
 
+### See what a complete layout looks like
+
+![TVGenie Movie Categories: a ready-made layout in the featured preview](images/02-featured-preview.png)
+
+Read this example from the outside in: **Movie Categories** is the collection; **Daily Picks**, **Latest Movies** and **Trending Movies** are folder tiles. The images identify the folders. The catalog sources attached to each folder determine the titles that open inside it.
+
+This is the builder's preview of a complete featured design, before import. Use it as a visual reference; the final app can arrange the same layout differently.
+
 ### Example: import only TVGenie's Movie Categories
 
 1. Find **TVGenie** in **Featured**, then click **Preview**.
@@ -187,7 +206,7 @@ A new collection is not yet in your list until you click **Add collection**. **D
 
 The picker lets you search, filter by media type and select several catalogs at once.
 
-**You can also add folder sources directly from a provider.** Click **Add catalog**, then use the **TMDB** or **TheTVDB** tab to find collections, or the **MDBList** tab to search for lists. Select the collection or list you want and add it to the folder. You do not have to start with a source already shown under **Your catalogs**. Available options depend on the provider and your configuration.
+You can also use the provider tabs shown above. See [Find a source directly from a provider](#d-find-a-source-directly-from-a-provider) for the steps.
 
 Choose the correct media type: **TMDB Popular — movie** and **TMDB Popular — series** are different catalogs.
 
@@ -203,6 +222,39 @@ Select **Movie Night**, click **Add folder**, and repeat the process:
 This is an example layout, not a required naming scheme. You can use your own lists instead.
 
 **An empty folder can still export, but it opens empty.** Add at least one source if you want it to show titles.
+
+### D. Find a source directly from a provider
+
+The **Add catalogs** picker pictured above has four tabs: **Your catalogs**, **MDBList**, **TheTVDB** and **TMDB**. Your catalogs reuses sources already in your configuration; the provider tabs let you find additional sources without leaving the builder.
+
+1. Select the folder that should receive the source, then click **Add catalog**.
+2. Choose **TMDB** or **TheTVDB** to find collections, or **MDBList** to search for lists.
+3. Enter a specific name. For example, try `The Lord of the Rings` when looking for a film collection. This is a search example, not a guarantee of a particular result.
+4. Inspect the results and select the collection or list you actually want. Check its media type and any available description; similarly named lists can have different contents.
+5. Add the selection, then confirm that it appears in the folder's **Sources**.
+6. Review any catalog additions or required provider access shown by the builder. Save the layout, export it, and import it into your app.
+
+| Source tab | Choose it for | Check before adding |
+|---|---|---|
+| Your catalogs | Reusing an enabled catalog you already configured. | Correct movie/series type and filters. |
+| TMDB | Finding a TMDB collection. | The intended franchise or collection, rather than assuming every title search is a collection. |
+| TheTVDB | Finding a collection available through TheTVDB's picker. | The result's contents and supported media type. |
+| MDBList | Searching for a list that matches your theme. | List identity, contents and any required provider access. |
+
+**No useful results?** Try the full name rather than an abbreviation, check provider access, and confirm you chose the right tab. If you already have a supported list URL, [Quick Add](#example-make-a-source-then-put-it-in-a-folder) is another route.
+
+### E. Check the finished Movie Night example
+
+Before exporting, select **Movie Night** and confirm this structure in the editor:
+
+| Collection | Folder tile | Attached source | Expected result when opened |
+|---|---|---|---|
+| Movie Night | Popular Movies | TMDB Popular — movie | Popular movie titles. |
+| Movie Night | Top Rated Movies | TMDB Top Rated — movie | Top-rated movie titles. |
+
+You should have one collection containing two folders, with one source under each. The preview should show two folder tiles; opening those folders in the app should show their respective titles. Folder artwork is optional for this first check.
+
+Use the complete featured preview above to understand the visual structure. The Movie Night table is the expected result of the manual exercise, not a screenshot from a tested client import.
 
 ## 6. Customize folders and collections
 
@@ -222,6 +274,23 @@ This is an example layout, not a required naming scheme. You can use your own li
 ![Folder sources and the Jellyfin-only nesting option](images/11-folder-sources.png)
 
 The catalog source supplies the contents; these controls arrange how it is attached to the folder. Use the source arrows or drag handles to change source order. Its actions menu includes **Rename catalog** and **Remove from folder**.
+
+### Which artwork goes where?
+
+Think about the part of the layout you are decorating before choosing an image.
+
+| Artwork field | Belongs to | Intended use |
+|---|---|---|
+| Cover image URL | Folder | The tile you select to open that folder. For example, a Popular Movies cover identifies that folder. |
+| Backdrop image URL | Collection, under Nuvio presentation | Background artwork for the whole collection. |
+| Hero backdrop URL | Folder, under Nuvio artwork | Artwork for the folder's hero presentation in a supporting app. |
+| Title logo URL | Folder, under Nuvio artwork | A graphic title/logo for the folder's presentation. |
+| Focus GIF URL / Play focus GIF | Folder, under Nuvio artwork | Optional animated artwork when supported by the app. |
+| Hero video URL | Folder, under Nuvio artwork | Optional video for the hero presentation when supported. |
+
+**Example:** Movie Night can have a collection backdrop, while Popular Movies and Top Rated Movies each have their own covers. Those covers do not replace the posters of the movies inside the folders.
+
+The featured preview shows labeled folder covers such as Daily Picks and Latest Movies. Use the [folder settings screenshot](#folder-settings) to locate the cover control. Start with covers; add optional Nuvio artwork after the basic layout works. Fusion ignores Nuvio-specific presentation settings.
 
 ### Nuvio presentation
 
@@ -267,6 +336,16 @@ The screenshot is an unfinished row before its catalog is selected. **Fusion dro
 ## 8. Save, export and use your layout
 
 There are two separate jobs: save the design in AIO, then import it into the viewing app.
+
+| Action | What it does | What to do next |
+|---|---|---|
+| Add collection / Add row | Adds the new entry to the builder design. | Review the entry, then save the configuration. |
+| Apply only | Applies the design to the current configuration without saving it to the server. | Save the configuration when you are ready to keep it on the server. |
+| Save | Stores the configuration on the server. | Export for the app you use. |
+| Download | Downloads the selected export as a JSON file. | Import that file into the target app. |
+| Import in Nuvio or Fusion | Loads the exported layout in that app. | Open a folder or row to check the contents. |
+
+**Typical sequence:** Add collection → Save → Export & share → Download → Import in your app.
 
 1. Expand any **issues to fix** and resolve them.
 2. Click **Save** to store the configuration on the server. **Apply only** keeps the design in the current configuration without saving it to the server.
@@ -325,20 +404,15 @@ Expand the issue indicator. Resolve the specific problem it names, such as missi
 
 Check the cover URL first: it should point to an image the viewing device can reach. A successful browser preview on one device does not prove another device can reach a private server. If using **Serve images through this server**, check that the app can reach AIO too.
 
-### More symptoms
-
+### Other problems
 
 | Problem | What to check |
 |---|---|
-| Folder opens empty | Does it have a catalog source? Is that source enabled and working in AIO? |
-| New collection is missing from the list | Did you click Add collection after creating it? |
-| Save is disabled | Expand the issue indicator. Check missing provider keys, required configuration and catalog limits. |
-| Catalog or genre options are missing | Check the catalog source. A saved manifest provides details that a local draft may not contain. |
-| Source is wrong or unavailable | Use Change source to inspect the manifest URL; use your own configuration, not somebody else's private addon link. |
-| App still shows the old design | Save, then re-import the export into the app. |
-| Fusion has duplicate widgets | Re-import only the changed replacements, following the update guidance above. |
+| New collection is missing from the builder list | Click Add collection after creating it. |
+| Source is wrong or unavailable | Check the folder's Sources and the builder's source indicator. Use your own saved configuration. |
+| Fusion has duplicate widgets | Follow [Updating an existing layout](#updating-an-existing-layout) and import only the changed replacements. |
 | Nuvio is missing a classic row | Classic rows are Fusion-only. Use a collection with folders for Nuvio. |
-| Artwork is missing | Check the image URL and whether the device can reach it; consider server image caching. |
-| Preview looks different from the app | The builder preview is approximate. Test the exported layout in the target app. |
+| Preview looks different from the app | The builder preview is approximate. Check the exported layout in the target app. |
+| Images load slowly on repeat visits | See [Caching & Warming](Caching-Warming-Guide.md) for image routing, caching and warming checks. |
 
 **A good first setup:** one collection, two folders, one source per folder. Once that works in your app, add more sections or adapt a featured layout.
