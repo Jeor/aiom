@@ -17,3 +17,10 @@ An illustrated, community-oriented guide to preparing catalogs, building collect
 
 - Image caching, storage budgets, image sizes and freshness policies.
 - Essential, popular, comprehensive and MAL warming; image queues and troubleshooting.
+
+## Guides
+
+- [Collections](https://jeor.github.io/aiom/) — catalogs, folders, rows, featured examples, exports and troubleshooting.
+- [Caching & Warming](https://jeor.github.io/aiom/caching-warming.html) — recommended starting setup, defaults, image caching, warming modes and troubleshooting.
+
+Each page offers a Markdown copy and an offline HTML download.

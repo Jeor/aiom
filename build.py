@@ -1,22 +1,20 @@
 from pathlib import Path
 import re,html,base64,zipfile,shutil,struct
 p=Path(__file__).parent
-src=(p/'Collection-Builder-Guide.md').read_text()
-for bad in ['192.168.','/home/','d9fcc103','access_token=','api_key=']:
- assert bad.lower() not in src.lower(),bad
-imgs=re.findall(r'!\[[^\]]*\]\(([^)]+)\)',src)
-assert all((p/x).is_file() for x in imgs)
+pages=[('Collection-Builder-Guide','index.html','Collections','10-quick-troubleshooting'),('Caching-Warming-Guide','caching-warming.html','Caching & Warming','which-setting-should-i-check')]
+imgs=[]
 def slug(s):return re.sub(r'[^\w\- ]','',s.lower()).replace(' ','-')
 def inline(s):
  s=html.escape(s)
  s=re.sub(r'`([^`]+)`',r'<code>\1</code>',s)
  s=re.sub(r'\*\*([^*]+)\*\*',r'<strong>\1</strong>',s)
- s=re.sub(r'\[([^]]+)\]\((#[^)]+)\)',r'<a href="\2">\1</a>',s)
+ s=re.sub(r'\[([^]]+)\]\(([^)]+)\)',r'<a href="\2">\1</a>',s)
  return s
-headings=[(slug(t),t) for t in re.findall(r'^## (.*)$',src,re.M)]
-ids=set(slug(t) for t in re.findall(r'^#{1,3} (.*)$',src,re.M))
-for anchor in re.findall(r'\]\(#([^)]+)\)',src):assert anchor in ids,anchor
-def render(embedded):
+def render(src, page, embedded):
+ stem,route,label,help_anchor=page
+ headings=[(slug(t),t) for t in re.findall(r'^## (.*)$',src,re.M)]
+ for other in pages:
+  src=src.replace('('+other[0]+'.md', '('+(other[0]+'.html' if embedded else other[1]))
  out=[];lines=src.splitlines();i=0
  while i<len(lines):
   s=lines[i]
@@ -35,8 +33,8 @@ def render(embedded):
    out.append(f'<figure><img loading="eager" width="{width}" height="{height}" alt="'+html.escape(m[1],quote=True)+'" src="'+path+'"><figcaption>'+html.escape(m[1])+'</figcaption></figure>');i+=1;continue
   m=re.match(r'(#{1,3}) (.*)',s)
   if m:
-   n=len(m[1]);out.append(f'<h{n} id="{slug(m[2])}">'+inline('Collection Builder Guide' if n==1 else m[2])+f'</h{n}>')
-   if n==1 and not embedded:out.append('<div class="download"><a href="Collection-Builder-Guide.md">Read Markdown</a><a href="Collection-Builder-Guide.html" download>Download offline guide</a><a href="#10-quick-troubleshooting">Find a fix</a></div>')
+   n=len(m[1]);out.append(f'<h{n} id="{slug(m[2])}">'+inline(m[2])+f'</h{n}>')
+   if n==1 and not embedded:out.append(f'<div class="download"><a href="{stem}.md">Read Markdown</a><a href="{stem}.html" download>Download offline guide</a><a href="#{help_anchor}">Find a fix</a></div>')
    i+=1;continue
   if s=='---':out.append('<hr>');i+=1;continue
   m=re.match(r'(?:\d+\. |\- )(.*)',s)
@@ -52,16 +50,33 @@ def render(embedded):
   return pieces[0]+''.join('<div class="guide-subsection">'+piece+'</div>' for piece in pieces[1:])
  content=sections[0]+''.join('<section class="guide-section" aria-labelledby="'+re.search(r'id="([^"]+)"',part)[1]+'">'+subsections(part)+'</section>' for part in sections[1:])
  css='<style>'+(p/'guide.css').read_text()+'</style>' if embedded else '<link rel="stylesheet" href="guide.css">'
- nav='<aside class="sidebar"><details open><summary>On this page</summary><nav aria-label="Guide sections">'+''.join('<a href="#'+a+'">'+html.escape(t)+'</a>' for a,t in headings)+'</nav></details><script>if(matchMedia("(max-width:720px)").matches)document.querySelector(".sidebar details").open=false;</script></aside>'
- header='<header class="app-header"><a class="brand" href="#main"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 10 5-10 5L2 8l10-5Z"/><path d="m2 12 10 5 10-5M2 16l10 5 10-5"/></svg><div><div class="brand-name">AIOMetadata</div><div class="brand-subtitle">Community guide · Collections &amp; Widgets</div></div></a><a class="repo-link" href="https://github.com/cedya77/aiometadata">GitHub</a></header>'
- return '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="A practical illustrated guide to AIO Metadata catalogs, collections, Nuvio and Fusion layouts, saving, sharing and troubleshooting."><title>AIO Metadata Collection Builder Guide</title>'+css+'</head><body><a class="skip" href="#main">Skip to guide</a>'+header+'<div class="shell">'+nav+'<main id="main">'+content+'<script>if("IntersectionObserver" in window){const links=[...document.querySelectorAll(".sidebar nav a")];const observer=new IntersectionObserver(entries=>{for(const e of entries){if(e.isIntersecting){for(const a of links){if(a.hash==="#"+e.target.id)a.setAttribute("aria-current","location");else a.removeAttribute("aria-current");}}}},{rootMargin:"0px 0px -65% 0px"});document.querySelectorAll("main h2").forEach(h=>observer.observe(h));}</script><footer><a class="back" href="#main">Back to top</a></footer></main></div></body></html>'
-(p/'index.html').write_text(render(False))
-(p/'Collection-Builder-Guide.html').write_text(render(True))
-# The publication directory is allowlisted: no drafts, logs, account exports or unrelated files.
+ page_nav='<nav class="guide-pages" aria-label="Guide pages">'+''.join('<a href="'+(q[0]+'.html' if embedded else q[1])+'"'+(' aria-current="page"' if q==page else '')+'>'+html.escape(q[2])+'</a>' for q in pages)+'</nav>'
+ nav='<aside class="sidebar">'+page_nav+'<details open><summary>On this page</summary><nav aria-label="Guide sections">'+''.join('<a href="#'+a+'">'+html.escape(t)+'</a>' for a,t in headings)+'</nav></details><script>if(matchMedia("(max-width:720px)").matches)document.querySelector(".sidebar details").open=false;</script></aside>'
+ header='<header class="app-header"><a class="brand" href="#main"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 10 5-10 5L2 8l10-5Z"/><path d="m2 12 10 5 10-5M2 16l10 5 10-5"/></svg><div><div class="brand-name">AIOMetadata</div><div class="brand-subtitle">Community guides</div></div></a><a class="repo-link" href="https://github.com/cedya77/aiometadata">GitHub</a></header>'
+ return '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="A practical illustrated guide to AIO Metadata catalogs, collections, Nuvio and Fusion layouts, saving, sharing and troubleshooting."><title>AIO Metadata — '+html.escape(label)+'</title>'+css+'</head><body><a class="skip" href="#main">Skip to guide</a>'+header+'<div class="shell">'+nav+'<main id="main">'+content+'<script>if("IntersectionObserver" in window){const links=[...document.querySelectorAll(".sidebar details nav a")];const observer=new IntersectionObserver(entries=>{for(const e of entries){if(e.isIntersecting){for(const a of links){if(a.hash==="#"+e.target.id)a.setAttribute("aria-current","location");else a.removeAttribute("aria-current");}}}},{rootMargin:"0px 0px -65% 0px"});document.querySelectorAll("main h2").forEach(h=>observer.observe(h));}</script><footer><a class="back" href="#main">Back to top</a></footer></main></div></body></html>'
+for page in pages:
+ src=(p/(page[0]+'.md')).read_text()
+ for bad in ['192.168.','/home/','d9fcc103','access_token=','api_key=']:
+  assert bad.lower() not in src.lower(),bad
+ ids={slug(t) for t in re.findall(r'^#{1,3} (.*)$',src,re.M)}
+ for anchor in re.findall(r'\]\(#([^)]+)\)',src):assert anchor in ids,anchor
+ imgs+=re.findall(r'!\[[^\]]*\]\(([^)]+)\)',src)
+ online=render(src,page,False)
+ if page[1]=='index.html':
+  redirects={'11-cache-images-for-faster-repeat-browsing':'image-caching','12-choose-a-warming-mode':'warming-modes','13-check-warming-progress-and-solve-problems':'progress-and-troubleshooting'}
+  import json
+  script='<script>const moved='+json.dumps(redirects)+';if(moved[location.hash.slice(1)])location.replace("caching-warming.html#"+moved[location.hash.slice(1)]);</script>'
+  online=online.replace('</head>',script+'</head>')
+ (p/page[1]).write_text(online)
+ (p/(page[0]+'.html')).write_text(render(src,page,True))
+assert all((p/x).is_file() for x in imgs)
+# Only curated guide files and referenced screenshots enter the publication package.
 repo=p/'github-ready';repo.mkdir(exist_ok=True)
-files=['README.md','Collection-Builder-Guide.md','index.html','guide.css','Collection-Builder-Guide.html','build.py','CONTRIBUTING.md','ATTRIBUTION.md','.nojekyll','.gitignore']+list(dict.fromkeys(imgs))
+files=['README.md','guide.css','build.py','CONTRIBUTING.md','ATTRIBUTION.md','.nojekyll','.gitignore']
+for page in pages:files += [page[0]+'.md',page[0]+'.html',page[1]]
+files+=list(dict.fromkeys(imgs))
 for f in files:
  dest=repo/f;dest.parent.mkdir(exist_ok=True,parents=True);shutil.copy2(p/f,dest)
 with zipfile.ZipFile(p/'Collection-Builder-Guide.zip','w',zipfile.ZIP_DEFLATED) as z:
  for f in files:z.write(repo/f,'collection-builder-guide/'+f)
-print('Built dark guide, offline edition and GitHub package with',len(imgs),'screenshots.')
+print('Built',len(pages),'guide pages, offline editions and package with',len(set(imgs)),'screenshots.')
