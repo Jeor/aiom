@@ -2,6 +2,18 @@
 
 Cache images for faster repeat visits, then warm selected content ahead of time. Start small and increase coverage only when the results justify the extra requests and storage.
 
+## Choose your setup
+
+Choose the closest match, then use the linked steps. You can expand coverage later without starting over.
+
+| Your setup | Start with | Next step |
+|---|---|---|
+| Normal browsing or a small household | Enable caching for the artwork you use. Let browsing fill it; a full catalog warm is optional. | Follow [Recommended starting setup](#recommended-starting-setup). |
+| Selected catalogs should load quickly on the first visit | Use comprehensive warming for a saved configuration, starting with three pages per catalog. It warms eligible catalogs in that configuration, not just the folder currently open. | Follow [Comprehensive mode](#b-warm-your-own-catalogs-with-comprehensive-mode). |
+| A shared server with many users | Start with on-demand caching and essential/popular warming for shared content. Keep comprehensive coverage limited to representative configurations; the current UUID control accepts at most five. | Compare [Warming modes](#warming-modes), then monitor provider errors, disk use and responsiveness before expanding. |
+
+A larger server does not need every warmer enabled. Choose work that people will reuse, and keep enough capacity for normal browsing while it runs.
+
 ## Recommended starting setup
 
 **New to caching? Start here.** These suggestions suit a modest setup; they are not a requirement to change settings that already work well. The **Default** column describes the checked upstream settings. Your installation may already have overrides.
@@ -219,6 +231,20 @@ Search for **Image Warm** in Dashboard → Settings to see the queue and concurr
 ![Ops quick actions for essential, MAL and comprehensive warming](images/15-ops-warming-controls.png)
 
 Use **Dashboard → Ops** for cache sizes and warming progress. Use **System** for memory and event-loop delay, and **Logs** for the reason a request failed. Do not confuse the metadata/Redis hit rate with the image cache's effectiveness.
+
+### Images, Sync TTL and Force
+
+These buttons belong to **Ops → Maintenance Tasks → Comprehensive Catalog Warming**. Other tasks also have a Force button, which runs that particular task.
+
+| Button | What it does | When to use it |
+|---|---|---|
+| **Images** | Walks the configured catalogs and offers their artwork to the image warmer while leaving the catalog warming schedule unchanged. Fresh catalog pages can be reused; missing or expired pages may still require provider calls. | After enabling another image class or when you want to prepare artwork without moving the next catalog run. |
+| **Sync TTL** | Shortens catalog cache lifetimes that extend beyond the next scheduled warm, so those entries can be rebuilt when that run occurs. It does not download images or start a warm. | When catalog entries would otherwise stay fresh past the next scheduled run, such as after changing the warming interval. |
+| **Force** | Starts a comprehensive pass now, bypassing the normal interval check. It records a new run for scheduling, but can still reuse fresh catalog pages. It does not mean “clear everything and fetch it again.” | When you want a catalog warming pass now instead of waiting for the scheduled run. |
+
+**Sync TTL has wider scope than the selected UUIDs.** In the checked implementation, it scans current-epoch catalog entries in Redis, not only entries belonging to the warming configurations. On a shared server, shortening those lifetimes can cause other catalogs to need refreshing sooner. It is an occasional maintenance action, not a routine speed button.
+
+Images and Force still require comprehensive warming to be enabled and saved UUIDs to be present. They do not bypass quiet hours or start a second pass while one is running. Sync TTL requires Redis and a future scheduled run; if a run is already due, there is nothing to align. Check the task status and logs after clicking rather than relying only on the “started” message.
 
 ### Understand the image counters
 
