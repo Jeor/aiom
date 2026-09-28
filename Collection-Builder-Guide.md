@@ -1,4 +1,4 @@
-# AIO Metadata: Collection Builder Guide
+# AIOMetadata: Collection Builder Guide
 
 
 Build a layout from your catalogs, then export it to Nuvio or Fusion. Need to add sources or organize tags first? See [Catalog Management](Catalog-Management-Guide.md). For loading performance, see [Caching & Warming](Caching-Warming-Guide.md).
@@ -47,7 +47,7 @@ A folder's cover is artwork for that folder, not the posters for every movie ins
 
 ## 2. Open the builder and choose your app
 
-1. Open your AIO Metadata configuration and log into your saved setup.
+1. Open your AIOMetadata configuration and log into your saved setup.
 2. Open **Catalogs**.
 3. Click **Collections** to open **Collections & Widgets**.
 4. Choose **Nuvio** or **Fusion** at the top, depending on where you will use the layout.

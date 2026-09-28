@@ -1,6 +1,6 @@
 # Attribution and scope
 
-AIO Metadata, Nuvio and Fusion names and interfaces belong to their respective projects. Screenshot artwork and featured layouts retain their creators' rights.
+AIOMetadata, Nuvio and Fusion names and interfaces belong to their respective projects. Screenshot artwork and featured layouts retain their creators' rights.
 
 The featured gallery shown in this guide credits Starter Kit to Renoria, Ninja Streams to RandomNinjaAtk, Callandt95 to Callandt, Snoak to snoak, TVGenie to tvgeniekodi, and Unified Media Experience to nobnobz. The worked featured example uses TVGenie's Movie Categories.
 

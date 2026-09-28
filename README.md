@@ -1,4 +1,4 @@
-# AIO Metadata Community Guides
+# AIOMetadata Community Guides
 
 An illustrated, community-oriented guide to preparing catalogs, building collections, using featured layouts, exporting to Nuvio or Fusion, and troubleshooting common problems.
 
@@ -27,4 +27,4 @@ An illustrated, community-oriented guide to preparing catalogs, building collect
 
 Each page offers a Markdown copy and an offline HTML download.
 
-Support AIO Metadata’s creator: [Buy Cedya a coffee](https://buymeacoffee.com/cedya).
+Support AIOMetadata’s creator: [Buy Cedya a coffee](https://buymeacoffee.com/cedya).
