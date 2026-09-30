@@ -41,7 +41,7 @@ Start with caching, then add warming only if first visits need it. Keep settings
 | Prefer Smaller TMDB Backdrops | Off | Keep off for full-resolution backgrounds. |
 | Warmup Mode | `essential` | Keep essential for a light start; choose comprehensive for selected saved catalogs. |
 | Max Pages Per Catalog | `100` | If using comprehensive, test `3` pages first. This is our suggestion, not the default. |
-| Warmup Interval (hrs) | `24` | Keep `24` for comprehensive warming. |
+| Warmup Interval (hrs) | `24` | Keep `24` for comprehensive warming and set Catalog Cache TTL (`CATALOG_TTL`) to `86400` seconds. |
 | Image Warm Concurrency (min / max) | `4` / `48` | Keep initially; try a maximum of `24` only if warming affects browsing. |
 
 
@@ -156,7 +156,7 @@ Start with the content people actually browse. Warming spends provider requests,
 | MAL warming | MAL catalog tasks, with optional priority genres, decades and seasonal/schedule coverage. | Setups that use MAL anime catalogs and have working provider access. |
 | Image warm queue | Downloads or renders offered artwork in the background. | Supports image preparation; it is not a separate scan of every movie or show in existence. |
 
-**Warmup Mode** offers `essential` and `comprehensive`. In comprehensive mode, the separate TMDB popular-content and MAL warmers are skipped. Do not try to enable every warmer to make the same content load faster. The small essential-cache task is separate from the TMDB popular-content pass.
+**Warmup Mode** offers `essential` and `comprehensive`. In comprehensive mode, the separate TMDB popular-content and MAL warmers are skipped because comprehensive warming already covers eligible catalogs from those sources in your selected configurations. You do not need to enable the separate warmers for that same content. The small essential-cache task is separate from the TMDB popular-content pass.
 
 ### A. Start with essential and popular warming
 
@@ -179,7 +179,7 @@ Open **Settings → Warming: Full**:
 1. Set **Warmup Mode** to `comprehensive`.
 2. Enter your saved configuration UUID in **Warmup UUIDs**. Use your own configuration identifier, not a provider API key. The current settings accept up to five UUIDs; keep these identifiers private.
 3. Set **Max Pages Per Catalog** to a modest starting value such as `3`. This is a suggested first test, not the application's default of `100`.
-4. Keep **Warmup Interval (hrs)** at `24`, **Initial Delay (sec)** at `300`, and **Task Delay (ms)** at `100` initially.
+4. Keep **Warmup Interval (hrs)** at `24` and set **Catalog Cache TTL (`CATALOG_TTL`)** to `86400` seconds. Keep **Initial Delay (sec)** at `300` and **Task Delay (ms)** at `100` initially.
 5. Leave **Resume on Restart** enabled. Apply the settings and follow any restart notice shown by your version.
 6. Open **Ops**, find **Comprehensive Catalog Warming**, and start one run using its **Force** control or the **Comprehensive** quick action.
 7. Watch progress and image capacity before increasing the page limit or adding more configurations.
@@ -190,7 +190,9 @@ Comprehensive does not mean literally every catalog: the current implementation 
 
 Keep **Warmup TTL Lead (sec)** at `60` initially. It helps warmed catalog entries expire shortly before the next run so the next pass can refresh them. Leave **Auto on Cache Epoch Change** off unless you intentionally want a new full run after invalidating the metadata cache namespace.
 
-The current settings enforce a minimum of **12 hours** for the comprehensive interval, even though its description mentions shorter fractional examples. Follow the validation in your installed version.
+The minimum comprehensive warming interval is **12 hours** in the checked version. Set **Catalog Cache TTL (`CATALOG_TTL`)** to the same duration in **seconds**: `43200` for 12 hours, or `86400` for 24 hours. A shorter TTL can let catalogs expire before the next run—for example, an 18-hour TTL with a 24-hour interval leaves a six-hour gap in scheduled warming coverage. Requests during that gap may need to rebuild expired pages.
+
+After changing these settings, the next scheduled warming cycle should bring warmed entries into alignment. You do not normally need to use **Sync TTL** or **Force** just to apply an interval change.
 
 ### C. Use quiet hours correctly
 
@@ -243,7 +245,7 @@ These buttons belong to **Ops → Maintenance Tasks → Comprehensive Catalog Wa
 | Button | What it does | When to use it |
 |---|---|---|
 | **Images** | Walks the configured catalogs and offers their artwork to the image warmer while leaving the catalog warming schedule unchanged. Fresh catalog pages can be reused; missing or expired pages may still require provider calls. | After enabling another image class or when you want to prepare artwork without moving the next catalog run. |
-| **Sync TTL** | Shortens catalog cache lifetimes that extend beyond the next scheduled warm, so those entries can be rebuilt when that run occurs. It does not download images or start a warm. | When catalog entries would otherwise stay fresh past the next scheduled run, such as after changing the warming interval. |
+| **Sync TTL** | Shortens catalog cache lifetimes that extend beyond the next scheduled warm, so those entries can be rebuilt when that run occurs. It does not download images or start a warm. | After adding and warming a catalog midway through the current interval, to align its expiry with the next scheduled run. |
 | **Force** | Starts a comprehensive pass now, bypassing the normal interval check. It records a new run for scheduling, but can still reuse fresh catalog pages. It does not mean “clear everything and fetch it again.” | When you want a catalog warming pass now instead of waiting for the scheduled run. |
 
 **Sync TTL has wider scope than the selected UUIDs.** In the checked implementation, it scans current-epoch catalog entries in Redis, not only entries belonging to the warming configurations. On a shared server, shortening those lifetimes can cause other catalogs to need refreshing sooner. It is an occasional maintenance action, not a routine speed button.
