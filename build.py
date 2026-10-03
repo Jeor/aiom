@@ -1,7 +1,7 @@
 from pathlib import Path
 import re,html,base64,zipfile,shutil,struct,json
 p=Path(__file__).parent
-pages=[('Catalog-Management-Guide','catalogs.html','Catalog Management','common-tag-questions'),('Collection-Builder-Guide','collections.html','Collections','10-quick-troubleshooting'),('Caching-Warming-Guide','caching-warming.html','Caching & Warming','which-setting-should-i-check')]
+pages=[('Catalog-Management-Guide','catalogs.html','Catalog Management','common-tag-questions'),('Collection-Builder-Guide','collections.html','Collections','10-quick-troubleshooting'),('Caching-Warming-Guide','caching-warming.html','Caching & Warming','which-setting-should-i-check'),('Jellyfin-Guide','jellyfin.html','Jellyfin & Profiles','troubleshooting')]
 imgs=[]
 SITE_HEADER='<header class="app-header"><a class="brand" href="index.html"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 10 5-10 5L2 8l10-5Z"/><path d="m2 12 10 5 10-5M2 16l10 5 10-5"/></svg><div><div class="brand-name">AIOMetadata</div><div class="brand-subtitle">Community guides</div></div></a><nav class="header-links" aria-label="Project links"><a class="repo-link" href="https://github.com/cedya77/aiometadata">GitHub</a><a class="coffee-link" href="https://buymeacoffee.com/cedya" aria-label="Support the AIOMetadata creator on Buy Me a Coffee" title="Support the AIOMetadata creator"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a3 3 0 0 1 0 6h-1M3 8h15v9a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V8ZM6 2v3M10 2v3M14 2v3"/></svg><span>Support the creator</span></a></nav></header>'
 def slug(s):return re.sub(r'[^\w\- ]','',s.lower()).replace(' ','-')
@@ -48,11 +48,12 @@ def render(src, page, embedded):
  sections=re.split(r'(?=<h2 )',content)
  # Keep the main path visible; references and optional branches open on demand.
  folded_sections={
+  'Jellyfin & Profiles': {'connect-your-app','other-user-controls','troubleshooting'},
   'Collections': {'1-what-are-you-building','4-understand-the-editor','6-customize-folders-and-collections','7-fusion-example-a-normal-catalog-row','9-share-a-layout-without-sharing-your-account-link'},
   'Catalog Management': {'filter-select-and-manage-tags','use-tags-to-build-a-collection-faster','tagged-profiles-and-optional-content-ratings','common-tag-questions','example-make-a-source-then-put-it-in-a-folder','where-does-the-builder-get-its-catalog-list'},
   'Caching & Warming': {'save-and-verify-settings','image-caching','warming-modes','progress-and-troubleshooting'},
  }
- folded_subsections={'defaults-and-suggested-values','which-button-should-i-use','read-the-catalog-management-list','see-what-a-complete-layout-looks-like','d-find-a-source-directly-from-a-provider','e-check-the-finished-movie-night-example','updating-an-existing-layout','image-caching','my-folder-is-empty','i-saved-but-nothing-changed-in-my-app','i-cannot-save-or-cannot-see-a-genre-option','my-artwork-is-blank','other-problems'}
+ folded_subsections={'tracker-reads-versus-tracker-writes','watchlist-and-favourites','forget-imported-history','defaults-and-suggested-values','which-button-should-i-use','read-the-catalog-management-list','see-what-a-complete-layout-looks-like','d-find-a-source-directly-from-a-provider','e-check-the-finished-movie-night-example','updating-an-existing-layout','image-caching','my-folder-is-empty','i-saved-but-nothing-changed-in-my-app','i-cannot-save-or-cannot-see-a-genre-option','my-artwork-is-blank','other-problems'}
  def fold(part,level):
   heading,body=part.split(f'</h{level}>',1)
   return '<details class="reference"><summary>'+heading+f'</h{level}>'+'</summary><div class="reference-body">'+body+'</div></details>'

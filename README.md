@@ -18,12 +18,16 @@ An illustrated, community-oriented guide to preparing catalogs, building collect
 - Image caching, storage budgets, image sizes and freshness policies.
 - Essential, popular, comprehensive and MAL warming; image queues and troubleshooting.
 
+- Jellyfin API setup, separate user accounts, trackers, catalog tags and stream addons.
+
 ## Guides
 
 - [Catalog Management](https://jeor.github.io/aiom/catalogs.html) — sources, visibility, tags and installation profiles.
 
 - [Collections](https://jeor.github.io/aiom/collections.html) — catalogs, folders, rows, featured examples, exports and troubleshooting.
 - [Caching & Warming](https://jeor.github.io/aiom/caching-warming.html) — recommended starting setup, defaults, image caching, warming modes and troubleshooting.
+
+- [Jellyfin & Profiles](https://jeor.github.io/aiom/jellyfin.html) — connect clients and customize each user.
 
 Each page offers a Markdown copy and an offline HTML download.
 
