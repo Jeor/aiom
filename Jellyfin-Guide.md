@@ -1,13 +1,15 @@
 # Jellyfin & Profiles
 
-Use AIOMetadata as a server in a Jellyfin-compatible app, with separate users, catalog selections and playback sources. You do not need to install a separate Jellyfin server for this connection. Client support and the available controls depend on your versions.
+Use AIOMetadata as a server in a Jellyfin-compatible app, with separate users, catalog selections and playback sources. You do not need to install a separate Jellyfin server for this connection. 
+
+The popup calls profiles **Users**: they are viewing profiles within one saved AIOMetadata configuration, not separate AIOMetadata logins. Client support and available controls depend on your versions.
 
 ## Quick start
 
 1. **Admin:** open **Dashboard → Settings → Features**, enable **Jellyfin API**, and save the dashboard settings.
-2. Open your saved AIOMetadata configuration. Refresh it if it was already open, then click **Jellyfin**.
+2. Open your saved AIOMetadata configuration. Refresh it if it was already open. Open the **Configuration** section and click **Jellyfin** beside the install controls.
 3. Under **Playback**, paste your stream addon's installation URL if you want to play titles.
-4. Set up the **Users** you need, then click **Save configuration** in the popup.
+4. Keep the main user for a single-person setup, or add users as needed. Click **Save configuration** in the popup.
 5. Copy **Server address** into your app's Add Server screen. Choose the user and sign in using Quick Connect, a client password, or your configuration password.
 
 **Two different saves:** dashboard settings enable the feature for the server. **Save configuration** saves your users, playback source and profile choices.
@@ -16,7 +18,7 @@ Use AIOMetadata as a server in a Jellyfin-compatible app, with separate users, c
 
 Only the server admin can enable **Jellyfin API** in the dashboard's **Settings → Features** section. Search the settings for `Jellyfin` if you cannot find it. Its environment-variable name is `JELLYFIN_API_ENABLED`.
 
-Save the dashboard change, then reload the configuration page. Load your saved configuration before looking for its **Jellyfin** button. If you use someone else's instance, ask its admin to enable the feature.
+Save the dashboard change, then reload the configuration page. Load your saved configuration, open **Configuration**, and look for **Jellyfin** beside **Install**. If you use someone else's instance, ask its admin to enable the feature.
 
 This exposes your AIOMetadata catalogs through a Jellyfin-compatible API. It does not create a local video library or provide transcoding. AIOMetadata gets playback links from your chosen stream addon; the player fetches the video directly.
 
@@ -31,11 +33,11 @@ Use the **Server address** shown in the Jellyfin popup, including its full path.
 | Client password | Generate a password for clients without Quick Connect, save the configuration, then use it at the client's sign-in screen. Replacing it signs clients out. |
 | Configuration password | An alternative sign-in method if your configuration has a password. Accounts created with a sign-in provider may need Quick Connect or a generated client password instead. |
 
-**Keep the address and passwords private.** Profiles share this configuration's sign-in methods; adding a user does not create a separate password for that person. Pick the correct user in the client, or choose it when approving Quick Connect.
+**Keep the address and passwords private.** Profiles share this configuration's sign-in methods; adding a user does not create a separate password for that person. Pick the correct user in the client, or choose it when approving Quick Connect. If the client asks for a username instead of showing user cards, enter the name from that user's card.
 
 ## Set up playback
 
-Paste a stream addon's **installation URL** into **Playback**, such as the configured manifest URL from AIOStreams. Save the configuration. Without a playback source, browsing works but titles will not play.
+Paste a stream addon's **installation URL** into **Playback**, such as the configured manifest URL from AIOStreams. Save the configuration. A user needs either this shared playback source or a Stream addon override on their card to play titles. Without either, they can only browse.
 
 | Control | When to use it |
 |---|---|
@@ -57,15 +59,17 @@ An empty **Stream addon** field inherits the main **Playback** URL. A filled fie
 3. Choose catalog tags, accounts, tracker and watchlist options as needed.
 4. Click **Save configuration**. Select that user when connecting the client.
 
-Click a user's picture to provide an image URL. Use distinct names; names are matched without regard to capitalization.
+The main user already exists and is marked **You**. Add another user only when you need a different person or a different view. Click a user's picture to provide an image URL. Use distinct names; names are matched without regard to capitalization.
 
 | Who is this profile for? | Same person as you | Result |
 |---|---|---|
 | You, with a different catalog selection | On | Shares your Continue Watching, watched marks and tracker writes. Catalog tags, stream addon and source choices can still differ. |
-| Another person with their own trackers | Off | Connect their accounts on their card. Their supported personal shelves, watchlist and tracking use those accounts. |
+| Another person with their own trackers | Off | Connect their accounts on their card. Their supported personal shelves, watchlist and tracking use those accounts. Services they have not connected do not fall back to your accounts within these supported integrations. |
 | Another person using local history only | Off | Choose This server only for tracker reads and watchlist, and leave their accounts disconnected. Their plays are remembered separately on this server. |
 
 **Separate catalogs do not mean separate history.** Leave **Same person as you** off for another person. A user with their own accounts cannot enable that switch until those accounts are disconnected.
+
+**For a local-only user, explicitly choose This server only.** Turning off **Same person as you** separates locally recorded history and stops writes to your trackers, but a user with no accounts of their own can still inherit your tracker-read choices. Check both the tracker and Watchlist choices rather than assuming the switch disables all external reads.
 
 ## Connect different accounts and trackers
 
@@ -92,13 +96,15 @@ The **Your trackers / Their trackers / Trackers this user reads** selector choos
 | Automatic | Merges paused titles from connected position-capable trackers. Watched marks, Next Up and Upcoming use the first available source in the order MDBList, Simkl, PublicMetaDB. |
 | A named tracker | Uses that source alongside activity recorded through this server. Useful when trackers disagree. |
 | AniList or MyAnimeList, where offered | Reads anime list progress. They do not supply playback positions, so Continue Watching comes from pauses recorded here. |
-| This server only | Stops external history reads. It does **not** turn off reporting plays to connected trackers. Disable Watch tracking for those services if that is also your intention. |
+| This server only | Stops external history reads. It does **not** turn off reporting plays to connected trackers. Disable Watch tracking for those services if that is also your intention; this also removes them from eligible tracker-read choices. |
+
+**AniList / MyAnimeList limitation:** the main user's selector can offer these anime sources, but this reviewed build only offers MDBList, Simkl and PublicMetaDB as explicit sources for users with their own accounts. Connecting AniList or MyAnimeList for a separate user does not make it appear in that dropdown. Their account can still support tracking and anime watchlist shelves.
 
 Plays recorded through this server take precedence over imported tracker state for the same title. The general **Watch Tracking** settings determine when playback is recorded, across users.
 
 ### Watchlist and favourites
 
-The **Watchlist** choices control the client's favourites separately from history. Select the relevant movie, series or anime shelves, use **Every connected**, or inherit **Same as you** where offered. A heart in the client writes to the selected shelves that support the title.
+The **Watchlist** choices control the client's favourites separately from history. Select the relevant movie, series or anime shelves, use **Every connected**, or inherit **Same as you** where offered. In clients that use favourites as the watchlist, a heart writes to the selected shelves that support the title. Pelagica has separate watchlist and favourite controls, so those actions are handled separately.
 
 **This server only** under Watchlist keeps favourites local. Changing the tracker-history selector does not change this watchlist choice. PublicMetaDB needs a watchlist list on the connected account to offer that shelf.
 
@@ -123,10 +129,10 @@ Tags select catalog sources. They do not filter individual titles by genre or au
 | Setting | Alex | Sam |
 |---|---|---|
 | Same person as you | Off | Off |
-| Tags | Drama, Documentaries | Animation |
-| Accounts | Alex's Simkl account | Sam's AniList account |
-| Tracker source | Simkl | AniList, if offered |
-| Watchlist | Simkl Movies and Series | AniList Anime |
+| Tags | Drama, Documentaries | Comedy |
+| Accounts | Alex's Simkl account | Sam's MDBList account |
+| Tracker source | Simkl | MDBList |
+| Watchlist | Simkl Movies and Series | MDBList Movies and Series |
 | Stream addon | Alex's configured addon URL | Sam's configured addon URL |
 
 Create these catalog tags first, then configure each card and save. These are example names and choices, not preset profiles. To create another view for yourself instead, turn **Same person as you** on and select its catalog tags.
@@ -157,4 +163,4 @@ AniSkip supplies anime markers without a key. IntroDB also needs no key; lookups
 | Changes do not show | Click Save configuration in the popup, then refresh or reconnect the client to replace its cached view. |
 | Home screen is empty | Check Show a Latest row per catalog; some clients build their home screen from those rows. |
 
-The layout and labels here reflect the October 2026 interface. If a control is absent, compare your installed version before changing unrelated settings.
+Checked against AIOMetadata testing build `0.0.0-testing.20261002.5`. Older stable releases may not have all of these controls. If a control is absent, compare your installed version before changing unrelated settings.
