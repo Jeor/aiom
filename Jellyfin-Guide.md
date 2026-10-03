@@ -61,7 +61,7 @@ An empty **Stream addon** field inherits the main **Playback** URL. A filled fie
 ## Add a user
 
 1. Under **Users**, enter a unique **New user name** and click **Add user**.
-2. Decide whether this is another view for you or a different person using the table below.
+2. Decide whether this is another view for you or a different person using the choices below.
 3. Choose catalog tags, accounts, tracker and watchlist options as needed.
 4. Click **Save configuration**. Select that user when connecting the client.
 

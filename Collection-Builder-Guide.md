@@ -3,6 +3,16 @@
 
 Build a layout from your catalogs, then export it to Nuvio or Fusion. Need to add sources or organize tags first? See [Catalog Management](Catalog-Management-Guide.md). For loading performance, see [Caching & Warming](Caching-Warming-Guide.md).
 
+## Quick start
+
+1. **Prepare a source.** In **Catalogs**, make sure the movie or show catalog you want is enabled. Save your AIO configuration.
+2. **Open Collections.** Choose **Nuvio** or **Fusion** at the top.
+3. **Create a layout.** Preview a **Featured** layout and import the parts you want, or create a collection with a folder and a catalog source.
+4. **Check and save.** Confirm that every folder has its intended sources, resolve any save issues, then save.
+5. **Use it in your app.** Export for your chosen app and import the file or supported link there. Saving in AIO alone does not update the app.
+
+**Success check:** you can see your collection in the app, open a folder, and see titles from the catalog you selected.
+
 ## Choose your starting point
 
 | What you want | Best place to start | What you will build |
@@ -13,16 +23,6 @@ Build a layout from your catalogs, then export it to Nuvio or Fusion. Need to ad
 | A folder based on a provider collection or public list | [Find a provider source](#d-find-a-source-directly-from-a-provider) | Attach a TMDB/TheTVDB collection or an MDBList list from the picker. |
 
 If this is your first layout, finish one small example and open it in your app before importing a large pack.
-
-## Quick start
-
-1. **Prepare a source.** In **Catalogs**, make sure the movie or show catalog you want is enabled. Save your AIO configuration.
-2. **Open Collections.** Choose **Nuvio** or **Fusion** at the top.
-3. **Create a layout.** Preview a **Featured** layout and import the parts you want, or create a collection with a folder and a catalog source.
-4. **Check and save.** Confirm that every folder has its intended sources, resolve any save issues, then save.
-5. **Use it in your app.** Export for your chosen app and import the file or supported link there. Saving in AIO alone does not update the app.
-
-**Success check:** you can see your collection in the app, open a folder, and see titles from the catalog you selected.
 
 ## 1. What are you building?
 
@@ -292,8 +292,6 @@ There are two separate jobs: save the design in AIO, then import it into the vie
 | Save | Stores the configuration on the server. | Export for the app you use. |
 | Download | Downloads the selected export as a JSON file. | Import that file into the target app. |
 | Import in Nuvio or Fusion | Loads the exported layout in that app. | Open a folder or row to check the contents. |
-
-**Typical sequence:** Add collection → Save → Export & share → Download → Import in your app.
 
 1. Expand any **issues to fix** and resolve them.
 2. Click **Save** to store the configuration on the server. **Apply only** keeps the design in the current configuration without saving it to the server.

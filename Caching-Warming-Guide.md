@@ -2,18 +2,6 @@
 
 Cache images for faster repeat visits, then warm selected content ahead of time. Start small and increase coverage only when the results justify the extra requests and storage.
 
-## Choose your setup
-
-Choose the closest match, then use the linked steps. You can expand coverage later without starting over.
-
-| Your setup | Start with | Next step |
-|---|---|---|
-| Normal browsing or a small household | Enable caching for the artwork you use. Let browsing fill it; a full catalog warm is optional. | Follow [Recommended starting setup](#recommended-starting-setup). |
-| Selected catalogs should load quickly on the first visit | Use comprehensive warming for a saved configuration, starting with three pages per catalog. It warms eligible catalogs in that configuration, not just the folder currently open. | Follow [Comprehensive mode](#b-warm-your-own-catalogs-with-comprehensive-mode). |
-| A shared server with many users | Start with on-demand caching and essential/popular warming for shared content. Keep comprehensive coverage limited to representative configurations; the current UUID control accepts at most five. | Compare [Warming modes](#warming-modes), then monitor provider errors, disk use and responsiveness before expanding. |
-
-A larger server does not need every warmer enabled. Choose work that people will reuse, and keep enough capacity for normal browsing while it runs.
-
 ## Recommended starting setup
 
 Start with caching, then add warming only if first visits need it. Keep settings that already work well. Expand the reference below to compare upstream defaults with suggested values.
@@ -44,6 +32,18 @@ Start with caching, then add warming only if first visits need it. Keep settings
 | Warmup Interval (hrs) | `24` | Keep `24` for comprehensive warming and set Catalog Cache TTL (`CATALOG_TTL`) to `86400` seconds. |
 | Image Warm Concurrency (min / max) | `4` / `48` | Keep initially; try a maximum of `24` only if warming affects browsing. |
 
+
+## Choose your setup
+
+Choose the closest match, then use the linked steps. You can expand coverage later without starting over.
+
+| Your setup | Start with | Next step |
+|---|---|---|
+| Normal browsing or a small household | Enable caching for the artwork you use. Let browsing fill it; a full catalog warm is optional. | Follow [Recommended starting setup](#recommended-starting-setup). |
+| Selected catalogs should load quickly on the first visit | Use comprehensive warming for a saved configuration, starting with three pages per catalog. It warms eligible catalogs in that configuration, not just the folder currently open. | Follow [Comprehensive mode](#b-warm-your-own-catalogs-with-comprehensive-mode). |
+| A shared server with many users | Start with on-demand caching and essential/popular warming for shared content. Keep comprehensive coverage limited to representative configurations; the current UUID control accepts at most five. | Compare [Warming modes](#warming-modes), then monitor provider errors, disk use and responsiveness before expanding. |
+
+A larger server does not need every warmer enabled. Choose work that people will reuse, and keep enough capacity for normal browsing while it runs.
 
 ## Which setting should I check?
 
