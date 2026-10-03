@@ -1,6 +1,6 @@
 # Jellyfin & Profiles
 
-Use AIOMetadata as a server in a Jellyfin-compatible app, with separate users, catalog selections and playback sources. You do not need to install a separate Jellyfin server for this connection. 
+Use AIOMetadata as a server in a Jellyfin-compatible app, with separate users, catalog selections and playback sources. You do not need to install a separate Jellyfin server for this connection.
 
 The popup calls profiles **Users**: they are viewing profiles within one saved AIOMetadata configuration, not separate AIOMetadata logins. Client support and available controls depend on your versions.
 
