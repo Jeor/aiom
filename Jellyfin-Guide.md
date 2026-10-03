@@ -4,6 +4,8 @@ Use AIOMetadata as a server in a Jellyfin-compatible app, with separate users, c
 
 The popup calls profiles **Users**: they are viewing profiles within one saved AIOMetadata configuration, not separate AIOMetadata logins. Client support and available controls depend on your versions.
 
+**Visuals:** click any image to enlarge it. Interface captures use example names and addresses; the diagrams illustrate setup choices.
+
 ## Quick start
 
 1. **Admin:** open **Dashboard → Settings → Features**, enable **Jellyfin API**, and save the dashboard settings.
@@ -16,6 +18,8 @@ The popup calls profiles **Users**: they are viewing profiles within one saved A
 
 ## Enable the Jellyfin API
 
+![Setup path: Dashboard → Settings → Features → Jellyfin API, then save. Navigation illustration.](images/jellyfin-enable-map.png)
+
 Only the server admin can enable **Jellyfin API** in the dashboard's **Settings → Features** section. Search the settings for `Jellyfin` if you cannot find it. Its environment-variable name is `JELLYFIN_API_ENABLED`.
 
 Save the dashboard change, then reload the configuration page. Load your saved configuration, open **Configuration**, and look for **Jellyfin** beside **Install**. If you use someone else's instance, ask its admin to enable the feature.
@@ -23,6 +27,8 @@ Save the dashboard change, then reload the configuration page. Load your saved c
 This exposes your AIOMetadata catalogs through a Jellyfin-compatible API. It does not create a local video library or provide transcoding. AIOMetadata gets playback links from your chosen stream addon; the player fetches the video directly.
 
 ## Connect your app
+
+![Jellyfin connection controls: Server address, Quick Connect, Client password and Playback. Names and addresses are examples.](images/jellyfin-connection.png)
 
 Use the **Server address** shown in the Jellyfin popup, including its full path. Do not substitute the dashboard address or a Stremio manifest link. The address must be reachable from the device running your app.
 
@@ -59,6 +65,8 @@ An empty **Stream addon** field inherits the main **Playback** URL. A filled fie
 3. Choose catalog tags, accounts, tracker and watchlist options as needed.
 4. Click **Save configuration**. Select that user when connecting the client.
 
+![A separate user before connecting accounts: Same person as you is off, tracker reads and Watchlist use This server only, and an empty Stream addon inherits the main source. Example name.](images/jellyfin-profile.png)
+
 The main user already exists and is marked **You**. Add another user only when you need a different person or a different view. Click a user's picture to provide an image URL. Use distinct names; names are matched without regard to capitalization.
 
 | Who is this profile for? | Same person as you | Result |
@@ -79,6 +87,8 @@ For your main user, connect services through the configuration's normal integrat
 2. Complete its sign-in flow using **their** account, or enter their API key when requested. Check the connected account name before continuing.
 3. Check **Watch tracking** and the **Movies / Series** switches for that service.
 4. Choose the tracker source and watchlist shelves for this user, then save the configuration.
+
+![Accounts: select a provider, enter that person’s credentials and connect. This example shows MDBList with an empty API-key field; no account is connected.](images/jellyfin-accounts.png)
 
 The current user-card integrations are **Simkl, MDBList, PublicMetaDB, AniList and MyAnimeList**. Service availability and options may differ on older builds. If a browser is already signed into your account at a provider, switch accounts before approving someone else's connection.
 
@@ -125,6 +135,8 @@ If a tracker is still selected, its history can return on the next sync. Choose 
 Tags select catalog sources. They do not filter individual titles by genre or automatically make a mixed list suitable for children. Configured tag rating limits also apply, but review your actual sources and results. These profiles share sign-in methods, so tags are not separate-password parental controls.
 
 ### Example: two people, two setups
+
+![Illustration: Alex uses Drama and Documentaries with Simkl; Sam uses Comedy with MDBList. Each can use a different stream addon under the same configuration.](images/jellyfin-profile-map.png)
 
 | Setting | Alex | Sam |
 |---|---|---|
