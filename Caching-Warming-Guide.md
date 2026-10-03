@@ -84,6 +84,8 @@ After the restart, confirm the dashboard returns, the intended values remain sav
 
 ## Image caching
 
+![Illustration: metadata caching stores details and artwork URLs; image caching stores files. Browsing fills caches on demand, while warming prepares selected content ahead of time.](images/cache-layers-map.png)
+
 **Caching stores images after they are fetched or rendered. Warming fetches content ahead of a visit.** You can use the image cache without running a full warming job: normal browsing fills it as images are requested through AIO's cache routes.
 
 | What is cached? | What it saves | Where to look |

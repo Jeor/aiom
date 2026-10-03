@@ -26,6 +26,8 @@ If this is your first layout, finish one small example and open it in your app b
 
 ## 1. What are you building?
 
+![Illustration: Movie Night contains two folders, each with a catalog source. Save the design, export it, then import it into Nuvio or Fusion.](images/collection-flow-map.png)
+
 The builder arranges catalogs into a layout. The catalogs supply the movies and shows; the layout controls how people browse them.
 
 | Term | What it means | Example |

@@ -51,6 +51,8 @@ The **Collections** filter offers **All**, **In a collection** and **Not in one*
 
 ## What are catalog tags?
 
+![Illustration: Movie Night groups two movie catalogs; selecting Movie Night or Documentaries matches catalogs with either tag, without changing their titles.](images/catalog-tags-map.png)
+
 A tag is a name you assign to one or more catalogs to group them, such as `Movie Night`, `Documentaries` or `To organize`. A catalog can have several tags, and catalogs from different providers can share one tag. The tag color is a visual aid.
 
 **A tag describes the catalog group, not the titles inside it.** Naming a tag `Comedy` does not filter a mixed movie list to comedies. Use a suitable list or discover-catalog filters to choose the actual content. Catalog tags are also separate from provider content tags, such as AniList tags used in a discover search.
@@ -95,6 +97,8 @@ For the Movie Night example, first apply the `Movie Night` tag to the sources yo
 Only tags covering sources available to the builder appear in its tag choices. If a tag is missing, confirm the catalogs are enabled, save your configuration and check the builder's source indicator.
 
 ## Tagged profiles and optional content ratings
+
+For users connecting through a Jellyfin-compatible client, see [Jellyfin profile tags and accounts](Jellyfin-Guide.md#show-only-selected-catalog-tags). The installation profiles below are a different entry point.
 
 The installation area's **Profile** choices let you select tagged catalog groups or **All catalogs**. Use the generated installation link for that choice. Clicking a tag in Catalog Management only filters the editor; it does not switch an existing app installation to that profile.
 
